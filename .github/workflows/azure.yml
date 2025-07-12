@@ -13,25 +13,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
-      - name: Install Azure Functions Core Tools
-        uses: npm/action-install@v1
-        with:
-          packages: 'azure-functions-core-tools@4 --unsafe-perm true'
-
       - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Publish to Azure Functions
+      - name: Install Azure Functions Core Tools
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+          npm install -g azure-functions-core-tools@4 --unsafe-perm true
+
+      - name: Publish to Azure Function App
         run: |
           func azure functionapp publish <YOUR_FUNCTION_APP_NAME> --python
         env:
-          AzureWebJobsFeatureFlags: EnableWorkerIndexing
-          AzureWebJobsSecretStorageType: files
-          FUNC_RESTART_ON_DEPLOYMENT_ERROR: 1
           AZURE_FUNCTIONAPP_PUBLISH_PROFILE: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
