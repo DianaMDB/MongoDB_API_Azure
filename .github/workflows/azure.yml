@@ -30,6 +30,6 @@ jobs:
 
       - name: Publish to Azure Function App
         run: |
-          func azure functionapp publish <YOUR_FUNCTION_APP_NAME> --python
+          func azure functionapp publish mdb-dataapi-repl --python
         env:
           AZURE_FUNCTIONAPP_PUBLISH_PROFILE: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
