@@ -28,8 +28,10 @@ jobs:
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
           npm install -g azure-functions-core-tools@4 --unsafe-perm true
 
+      - name: Write publish profile to file
+        run: |
+          echo "${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}" > publishProfile.publishsettings
+
       - name: Publish to Azure Function App
         run: |
-          func azure functionapp publish mdb-dataapi-repl --python
-        env:
-          AZURE_FUNCTIONAPP_PUBLISH_PROFILE: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          func azure functionapp publish mdb-dataapi-repl --python --publish-profile publishProfile.publishsettings
