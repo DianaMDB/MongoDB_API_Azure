@@ -1,0 +1,37 @@
+name: Build and deploy Python Function App
+
+on:
+  push:
+    branches:
+      - main  # or your actual branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Azure Functions Core Tools
+        uses: npm/action-install@v1
+        with:
+          packages: 'azure-functions-core-tools@4 --unsafe-perm true'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Publish to Azure Functions
+        run: |
+          func azure functionapp publish <YOUR_FUNCTION_APP_NAME> --python
+        env:
+          AzureWebJobsFeatureFlags: EnableWorkerIndexing
+          AzureWebJobsSecretStorageType: files
+          FUNC_RESTART_ON_DEPLOYMENT_ERROR: 1
+          AZURE_FUNCTIONAPP_PUBLISH_PROFILE: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
