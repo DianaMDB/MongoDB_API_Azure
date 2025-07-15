@@ -7,7 +7,7 @@ from pymongo import MongoClient
 from bson import ObjectId
 from datetime import datetime
 
-app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
 def connect_to_mongodb():
     conn_str = os.environ.get("MONGODBATLAS_CLUSTER_CONNECTIONSTRING")
