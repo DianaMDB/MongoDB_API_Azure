@@ -20,7 +20,6 @@ def connect_to_mongodb():
         logging.error(f"Error connecting to MongoDB: {e}")
         raise
 
-
 def success_response(body):
     return func.HttpResponse(
         json.dumps(body, cls=DateTimeEncoder),
@@ -42,31 +41,29 @@ class DateTimeEncoder(json.JSONEncoder):
             return o.isoformat()
         return super().default(o)
     
-@app.route(route="mdb_dataapi/{operation}",methods=['POST'])
+@app.route(route="mdb_dataapi/action/{operation}",methods=['POST'])
 def mongodb_dataapi_replace(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
     client = None
-
     try:
         payload = req.get_json()
         client = connect_to_mongodb()
         op = req.route_params.get('operation')
-        logging.info(op)
+        # logging.info(op)
         db,coll =  payload.get('database'),payload.get('collection')
-        logging.info(db)
-        logging.info(coll)  
+        # logging.info(db)
+        # logging.info(coll)  
         if op == "findOne":
             filter_op = payload['filter'] if 'filter' in payload else {}
             projection = payload['projection'] if 'projection' in payload else {}
             result = {"document": client[db][coll].find_one(filter_op, projection)}
-            print("*************")
-            print(result)
-            print("*************")
+            # print("*************")
+            # print(result)
+            # print("*************")
             if result['document'] is not None:
                 if isinstance(result['document']['_id'], ObjectId):
                     result['document']['_id'] = str(result['document']['_id'])
-
         elif op == "find":
             agg_query = []
 
