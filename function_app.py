@@ -84,7 +84,7 @@ def mongodb_dataapi_replace(req: func.HttpRequest) -> func.HttpResponse:
 
             result = {"documents": list(client[db][coll].aggregate(agg_query))}
             for obj in result['documents']:
-                if isinstance(obj['_id'], ObjectId):
+                if '_id' in obj and isinstance(obj['_id'], ObjectId):
                     obj['_id'] = str(obj['_id'])
 
         elif op == "insertOne":
@@ -139,3 +139,4 @@ def mongodb_dataapi_replace(req: func.HttpRequest) -> func.HttpResponse:
     finally:
         if client:
             client.close()
+
