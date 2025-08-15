@@ -62,7 +62,7 @@ def mongodb_dataapi_replace(req: func.HttpRequest) -> func.HttpResponse:
             # print(result)
             # print("*************")
             if result['document'] is not None:
-                if '_id' in obj and isinstance(result['document']['_id'], ObjectId):
+                if '_id' in result['document'] and isinstance(result['document']['_id'], ObjectId):
                     result['document']['_id'] = str(result['document']['_id'])
         elif op == "find":
             agg_query = []
@@ -139,5 +139,6 @@ def mongodb_dataapi_replace(req: func.HttpRequest) -> func.HttpResponse:
     finally:
         if client:
             client.close()
+
 
 
